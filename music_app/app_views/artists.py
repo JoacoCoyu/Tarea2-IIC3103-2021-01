@@ -1,12 +1,12 @@
 from django.http import JsonResponse, HttpResponse
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, csrf_protect, requires_csrf_token
 from rest_framework.decorators import api_view
 from base64 import b64encode
 from .. import models
 
 
 @csrf_exempt
-@api_view(["POST", "GET", "DELETE"])
+@api_view(["GET", "POST"])
 def artists(request):
     if request.method not in ('GET', 'POST'):
         return HttpResponse(status=405)
@@ -32,26 +32,20 @@ def artists(request):
         data_new_artist = list(new_artist.values())
         return JsonResponse(data_new_artist, safe=False)
 
-    elif request.method == 'DELETE':
-        print(request.method)
-        return JsonResponse({"msg": "ruta delete en construccion"})
 
-        #     def destroy(self, request, *args, **kwargs):
-        #         params = kwargs['pk']
-        #         params_list = params.split("-")
-        #         artist = models.Artist.objects.filter(id=params_list[0])
-        #         artist.delete()
-
-        #         return Response({"mesagge": "Artist was deleted"})
-
-
-@api_view(["POST", "GET"])
+# @csrf_exempt
+@api_view(["GET", "DELETE"])
 def artists_detail(request, artist_id):
 
-    if request.method not in ('GET', 'POST'):
-        return HttpResponse(status=405)
+    # if request.method not in ('GET', 'POST'):
+    #     return HttpResponse(status=405)
 
-    elif request.method == 'GET':
+    if request.method == 'GET':
         artist = models.Artist.objects.filter(identificador=artist_id)
         data_artist = list(artist.values())
         return JsonResponse(data_artist, safe=False)
+
+    elif request.method == 'DELETE':
+        artist = models.Artist.objects.filter(identificador=artist_id)
+        artist.delete()
+        return JsonResponse({"mesagge": "Artist was deleted"})
