@@ -1,50 +1,56 @@
-from rest_framework import viewsets
-from rest_framework.response import Response
+from django.http import JsonResponse, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
 from base64 import b64encode
-from .. import serializer
 from .. import models
 
 
-class ArtistViewset(viewsets.ModelViewSet):
+@csrf_exempt
+@api_view(["POST", "GET", "DELETE"])
+def artists(request):
+    if request.method not in ('GET', 'POST'):
+        return HttpResponse(status=405)
 
-    serializer_class = serializer.ArtistSerializer
+    if request.method == 'GET':
+        data = list(models.Artist.objects.values())
+        return JsonResponse(data, safe=False)
 
-    def get_queryset(self):
-
-        artist_data = models.Artist.objects.all()
-        return artist_data
-
-    def retrieve(self, request, *args, **kwargs):
-
-        params = kwargs
-        print(params['pk'])
-        params_list = params['pk'].split('-')
-
-        # if len(params_list) == 1:
-        artist = models.Artist.objects.filter(
-            id=params_list[0])  # filtrando por id
-        data_serialize = serializer.ArtistSerializer(artist, many=True)
-        return Response(data_serialize.data)
-
-    def create(self, request, *args, **kwargs):
-        artists_data = request.data
-        encoded = b64encode(artists_data['name'].encode()).decode('utf-8')
-
-        new_artist = models.Artist.objects.create(name=artists_data['name'],
+    elif request.method == 'POST':
+        artist_data = request.data
+        encoded = b64encode(artist_data['name'].encode()).decode('utf-8')
+        # print(request.data['name'])
+        new_artist = models.Artist.objects.create(name=artist_data['name'],
                                                   identificador=encoded,
-                                                  age=artists_data['age'],
-                                                  albums=artists_data['albums'],
-                                                  tracks=artists_data['tracks'],
-                                                  myself=artists_data['myself'],)
-
+                                                  age=artist_data['age']
+                                                  #   albums=artists_data['albums'],
+                                                  #   tracks=artists_data['tracks'],
+                                                  #   myself=artists_data['myself'],
+                                                  )
         new_artist.save()
-        data_serialize = serializer.ArtistSerializer(new_artist)
-        return Response(data_serialize.data)
+        new_artist = models.Artist.objects.filter(id=new_artist.id)
+        data_new_artist = list(new_artist.values())
+        return JsonResponse(data_new_artist, safe=False)
 
-    def destroy(self, request, *args, **kwargs):
-        params = kwargs['pk']
-        params_list = params.split("-")
-        artist = models.Artist.objects.filter(id=params_list[0])
-        artist.delete()
+    elif request.method == 'DELETE':
+        print(request.method)
+        return JsonResponse({"msg": "ruta delete en construccion"})
 
-        return Response({"mesagge": "Artist was deleted"})
+        #     def destroy(self, request, *args, **kwargs):
+        #         params = kwargs['pk']
+        #         params_list = params.split("-")
+        #         artist = models.Artist.objects.filter(id=params_list[0])
+        #         artist.delete()
+
+        #         return Response({"mesagge": "Artist was deleted"})
+
+
+@api_view(["POST", "GET", "DELETE"])
+def artists_detail(request, artist_id):
+
+    if request.method not in ('GET', 'POST'):
+        return HttpResponse(status=405)
+
+    elif request.method == 'GET':
+        artist = models.Artist.objects.filter(id=artist_id)
+        data_artist = list(artist.values())
+        return JsonResponse(data_artist, safe=False)

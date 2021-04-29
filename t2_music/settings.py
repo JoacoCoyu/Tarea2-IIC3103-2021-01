@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'rest_framework',
 ]
 
-
+#APPEND_SLASH = False
 #CSRF_COOKIE_SECURE = True
 
 MIDDLEWARE = [
