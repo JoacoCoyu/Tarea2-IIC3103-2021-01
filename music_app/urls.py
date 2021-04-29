@@ -8,6 +8,8 @@ urlpatterns = [
     path('artists/<str:artist_id>', artists.artists_detail, name='artist_detail'),
     path('artists/<str:artist_id>/albums',
          albums.artists_albums, name='artist_album_detail'),
+    path('artists/<str:artist_id>/tracks',
+         tracks.artists_tracks, name='artist_track_detail'),
     path('albums', albums.albums, name='all_albums'),
     path('albums/<str:album_id>', albums.albums_detail, name='album_detail'),
     path('albums/<str:album_id>/tracks',

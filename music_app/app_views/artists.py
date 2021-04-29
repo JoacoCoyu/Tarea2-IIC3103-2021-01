@@ -13,6 +13,7 @@ def artists(request):
 
     if request.method == 'GET':
         data = list(models.Artist.objects.values())
+        print(data)
         return JsonResponse(data, safe=False)
 
     elif request.method == 'POST':

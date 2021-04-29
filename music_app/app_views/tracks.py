@@ -7,19 +7,28 @@ from .. import models
 
 @csrf_exempt
 @api_view(["POST", "GET", "DELETE"])
-def artists_tracks(request, album_id):
+def artists_tracks(request, artist_id):
 
-    track_album = models.Album.objects.filter(identificador=album_id)
-    data_track_album = list(track_album.values())
+    album_artist = models.Artist.objects.filter(identificador=artist_id)
+    data_album_artist = list(album_artist.values())
 
     if request.method not in ('GET', 'POST'):
         return HttpResponse(status=405)
 
     if request.method == 'GET':
-        all_tracks = models.Track.objects.filter(
-            album_id_id=data_track_album[0]['id'])
-        data_tracks = list(all_tracks.values())
-        return JsonResponse(data_tracks, safe=False)
+        all_albums = models.Album.objects.filter(
+            artist_id_id=data_album_artist[0]['id'])
+        data_albums = list(all_albums.values())
+
+        all_tracks = []
+        for album in data_albums:
+            track = models.Track.objects.filter(
+                album_id_id=album['id'])
+            data_tracks = list(track.values())
+            for specific_album in data_tracks:
+                all_tracks.append(specific_album)
+
+        return JsonResponse(all_tracks, safe=False)
 
 
 @csrf_exempt
