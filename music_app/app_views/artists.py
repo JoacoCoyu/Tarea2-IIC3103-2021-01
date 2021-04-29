@@ -20,7 +20,7 @@ def artists(request):
         encoded = b64encode(artist_data['name'].encode()).decode('utf-8')
         # print(request.data['name'])
         new_artist = models.Artist.objects.create(name=artist_data['name'],
-                                                  identificador=encoded,
+                                                  identificador=encoded[0:22],
                                                   age=artist_data['age']
                                                   #   albums=artists_data['albums'],
                                                   #   tracks=artists_data['tracks'],
@@ -44,13 +44,13 @@ def artists(request):
         #         return Response({"mesagge": "Artist was deleted"})
 
 
-@api_view(["POST", "GET", "DELETE"])
+@api_view(["POST", "GET"])
 def artists_detail(request, artist_id):
 
     if request.method not in ('GET', 'POST'):
         return HttpResponse(status=405)
 
     elif request.method == 'GET':
-        artist = models.Artist.objects.filter(id=artist_id)
+        artist = models.Artist.objects.filter(identificador=artist_id)
         data_artist = list(artist.values())
         return JsonResponse(data_artist, safe=False)

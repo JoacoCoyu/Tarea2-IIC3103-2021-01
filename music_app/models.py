@@ -25,3 +25,18 @@ class Album(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Track(models.Model):
+    album_id = models.ForeignKey(
+        Album, related_name='album', default=None, on_delete=models.CASCADE)
+    name = models.CharField(max_length=200)
+    identificador = models.CharField(max_length=200)
+    duration = models.FloatField()
+    times_played = models.IntegerField(default=0)
+    artist = models.URLField()
+    album = models.URLField()
+    myself = models.URLField()
+
+    def __str__(self):
+        return self.name
