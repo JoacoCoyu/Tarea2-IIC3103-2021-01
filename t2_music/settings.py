@@ -15,7 +15,7 @@ import dj_database_url
 import environ
 
 # Initialise environment variables
-# env = environ.Env()
+#env = environ.Env()
 # environ.Env.read_env()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'music_app',
     'rest_framework',
-    'corsheaders',
+    # 'corsheaders',
 ]
 
 #APPEND_SLASH = False
@@ -58,14 +58,14 @@ INSTALLED_APPS = [
 #     'http://127.0.0.1:8000'
 # ]
 
-CORS_ALLOW_METHODS = (
-    'GET',
-    'POST',
-    'PUT',
-    'PATCH',
-    'DELETE',
-    'OPTIONS'
-)
+# CORS_ALLOW_METHODS = (
+#     'GET',
+#     'POST',
+#     'PUT',
+#     'PATCH',
+#     'DELETE',
+#     'OPTIONS'
+# )
 
 MIDDLEWARE = [
     # 'corsheaders.middleware.CorsMiddleware',
@@ -122,7 +122,7 @@ DATABASES = {
     }
 }
 
-db_from_env = dj_database_url.config(conn_max_age=600, ssl_require=True)
+db_from_env = dj_database_url.config(conn_max_age=600)
 DATABASES['default'].update(db_from_env)
 # , ssl_require=True
 

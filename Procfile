@@ -1,1 +1,0 @@
-web: gunicorn t2_music.wsgi --log-file -
