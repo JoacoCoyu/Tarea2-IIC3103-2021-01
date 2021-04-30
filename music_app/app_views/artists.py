@@ -5,6 +5,9 @@ from base64 import b64encode
 from .. import models
 
 
+api_url = 'https://t2-iic3103-jacouyoumdjian.herokuapp.com/'
+
+
 @csrf_exempt
 @api_view(["GET", "POST"])
 # artists
@@ -32,10 +35,16 @@ def artists(request):
         if not data_artist:
             new_artist = models.Artist.objects.create(name=artist_data['name'],
                                                       identificador=encoded[0:22],
-                                                      age=artist_data['age']
-                                                      #   albums=artists_data['albums'],
-                                                      #   tracks=artists_data['tracks'],
-                                                      #   myself=artists_data['myself'],
+                                                      age=artist_data['age'],
+                                                      # artists/<artist_id>/albums
+                                                      albums=api_url + \
+                                                      f'artists/{encoded[0:22]}/albums',
+                                                      # artists/<artist_id>/tracks
+                                                      tracks=api_url + \
+                                                      f'artists/{encoded[0:22]}/tracks',
+                                                      # artists/<artist_id>
+                                                      myself=api_url + \
+                                                      f'artists/{encoded[0:22]}'
                                                       )
             new_artist.save()
             new_artist = models.Artist.objects.filter(id=new_artist.id)

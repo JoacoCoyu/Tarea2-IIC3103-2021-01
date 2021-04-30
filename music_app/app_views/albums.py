@@ -5,6 +5,9 @@ from base64 import b64encode
 from .. import models
 
 
+api_url = 'https://t2-iic3103-jacouyoumdjian.herokuapp.com/'
+
+
 @csrf_exempt
 @api_view(["POST", "GET"])
 # artists/<str:artist_id>/albums
@@ -44,22 +47,27 @@ def artists_albums(request, artist_id):  # artist_id = codificacion del name
             new_album = models.Album.objects.create(name=album_data['name'],
                                                     identificador=encoded[0:22],
                                                     genre=album_data['genre'],
-                                                    artist_id_id=data_album_artist[0]['id']
-                                                    # artist=artists_data['artist'],
-                                                    # tracks=artists_data['tracks'],
-                                                    # myself=artists_data['myself'],
+                                                    artist_id_id=data_album_artist[0]['id'],
+                                                    artist=api_url +
+                                                    f'artists/{artist_id}',
+                                                    tracks=api_url +
+                                                    f'albums/{encoded[0:22]}/tracks',
+                                                    myself=api_url +
+                                                    f'albums/{encoded[0:22]}',
                                                     )
             new_album.save()
             new_album = models.Album.objects.filter(id=new_album.id)
             data_new_album = list(new_album.values())
             return JsonResponse(data_new_album, safe=False, status=201)
 
+            return JsonResponse({"msg": "ruta en construccion"}, status=201)
+
         else:
             return JsonResponse(data_album, safe=False, status=409)
 
 
-@csrf_exempt
-@api_view(["POST", "GET", "DELETE"])
+@ csrf_exempt
+@ api_view(["POST", "GET", "DELETE"])
 # albums
 def albums(request):
 
@@ -71,8 +79,8 @@ def albums(request):
         return JsonResponse(data, safe=False, status=200)
 
 
-@csrf_exempt
-@api_view(["POST", "GET", "DELETE"])
+@ csrf_exempt
+@ api_view(["POST", "GET", "DELETE"])
 # albums/<str:album_id>
 def albums_detail(request, album_id):
 

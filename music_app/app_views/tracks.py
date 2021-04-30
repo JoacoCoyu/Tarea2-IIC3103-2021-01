@@ -5,6 +5,9 @@ from base64 import b64encode
 from .. import models
 
 
+api_url = 'https://t2-iic3103-jacouyoumdjian.herokuapp.com/'
+
+
 @api_view(["GET"])
 # artists/<str:artist_id>/tracks
 def artists_tracks(request, artist_id):
@@ -70,16 +73,26 @@ def albums_tracks(request, album_id):
         exists_track = models.Track.objects.filter(identificador=encoded)
         data_track = list(exists_track.values())
 
+        album_track = models.Album.objects.filter(identificador=album_id)
+        data_album_track = list(album_track.values())
+
+        tracks_artist = models.Artist.objects.filter(
+            id=data_album_track[0]['artist_id_id'])
+        data_tracks_artist = list(tracks_artist.values())
+        artist_id = data_tracks_artist[0]['identificador']
+
         if not data_track:
             new_track = models.Track.objects.create(name=track_data['name'],
                                                     identificador=encoded[0:22],
                                                     duration=track_data['duration'],
-                                                    album_id_id=data_track_album[0]['id']
-                                                    # artist=artists_data['artist'],
-                                                    # tracks=artists_data['tracks'],
-                                                    # myself=artists_data['myself'],
+                                                    album_id_id=data_track_album[0]['id'],
+                                                    artist=api_url +
+                                                    f'artists/{artist_id}',
+                                                    album=api_url +
+                                                    f'albums/{album_id}',
+                                                    myself=api_url +
+                                                    f'tracks/{encoded[0:22]}',
                                                     )
-            # print(new_track)
             new_track.save()
             new_track = models.Track.objects.filter(id=new_track.id)
             data_new_track = list(new_track.values())
