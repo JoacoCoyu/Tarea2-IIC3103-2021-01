@@ -7,6 +7,7 @@ from .. import models
 
 @csrf_exempt
 @api_view(["POST", "GET", "DELETE"])
+# artists/<str:artist_id>/tracks
 def artists_tracks(request, artist_id):
 
     album_artist = models.Artist.objects.filter(identificador=artist_id)
@@ -16,23 +17,28 @@ def artists_tracks(request, artist_id):
         return HttpResponse(status=405)
 
     if request.method == 'GET':
-        all_albums = models.Album.objects.filter(
-            artist_id_id=data_album_artist[0]['id'])
-        data_albums = list(all_albums.values())
+        if data_album_artist:
+            all_albums = models.Album.objects.filter(
+                artist_id_id=data_album_artist[0]['id'])
+            data_albums = list(all_albums.values())
 
-        all_tracks = []
-        for album in data_albums:
-            track = models.Track.objects.filter(
-                album_id_id=album['id'])
-            data_tracks = list(track.values())
-            for specific_album in data_tracks:
-                all_tracks.append(specific_album)
+            all_tracks = []
+            for album in data_albums:
+                track = models.Track.objects.filter(
+                    album_id_id=album['id'])
+                data_tracks = list(track.values())
+                for specific_album in data_tracks:
+                    all_tracks.append(specific_album)
 
-        return JsonResponse(all_tracks, safe=False)
+            return JsonResponse(all_tracks, safe=False, status=200)
+
+        else:
+            return JsonResponse({"mesagge": "Tracks not found"}, status=404)
 
 
 @csrf_exempt
 @api_view(["POST", "GET", "DELETE"])
+# albums/<str:album_id>/tracks
 def albums_tracks(request, album_id):
 
     track_album = models.Album.objects.filter(identificador=album_id)
@@ -41,27 +47,46 @@ def albums_tracks(request, album_id):
     if request.method not in ('GET', 'POST'):
         return HttpResponse(status=405)
 
-    if request.method == 'GET':
-        all_tracks = models.Track.objects.filter(
-            album_id_id=data_track_album[0]['id'])
-        data_tracks = list(all_tracks.values())
-        return JsonResponse(data_tracks, safe=False)
+    if request.method == 'GET':  # GET all tracks from album album_id
 
-    elif request.method == 'POST':
+        if data_track_album:
+            all_tracks = models.Track.objects.filter(
+                album_id_id=data_track_album[0]['id'])
+            data_tracks = list(all_tracks.values())
+            return JsonResponse(data_tracks, safe=False, status=200)
+
+        else:
+            return JsonResponse({"mesagge": "Tracks not found"}, status=404)
+
+    elif request.method == 'POST':  # POST track from album album_id
+        valid_inputs = []
         track_data = request.data
+        for key in track_data.keys():
+            valid_inputs.append(key)
+
+        if valid_inputs != ['name', 'duration']:
+            return JsonResponse({"mesagge": "Invalid input"}, safe=False, status=400)
+
         encoded = b64encode(track_data['name'].encode()).decode('utf-8')
-        new_track = models.Track.objects.create(name=track_data['name'],
-                                                identificador=encoded[0:22],
-                                                duration=track_data['duration'],
-                                                album_id_id=data_track_album[0]['id']
-                                                # artist=artists_data['artist'],
-                                                # tracks=artists_data['tracks'],
-                                                # myself=artists_data['myself'],
-                                                )
-        new_track.save()
-        new_track = models.Track.objects.filter(id=new_track.id)
-        data_new_track = list(new_track.values())
-        return JsonResponse(data_new_track, safe=False)
+        exists_track = models.Track.objects.filter(identificador=encoded)
+        data_track = list(exists_track.values())
+
+        if not data_track:
+            new_track = models.Track.objects.create(name=track_data['name'],
+                                                    identificador=encoded[0:22],
+                                                    duration=track_data['duration'],
+                                                    album_id_id=data_track_album[0]['id']
+                                                    # artist=artists_data['artist'],
+                                                    # tracks=artists_data['tracks'],
+                                                    # myself=artists_data['myself'],
+                                                    )
+            new_track.save()
+            new_track = models.Track.objects.filter(id=new_track.id)
+            data_new_track = list(new_track.values())
+            return JsonResponse(data_new_track, safe=False, status=201)
+
+        else:
+            return JsonResponse(data_track, safe=False, status=409)
 
 
 @csrf_exempt
@@ -73,17 +98,25 @@ def tracks(request):
 
     if request.method == 'GET':
         data = list(models.Track.objects.values())
-        return JsonResponse(data, safe=False)
+        return JsonResponse(data, safe=False, status=200)
 
 
 @csrf_exempt
 @api_view(["POST", "GET", "DELETE"])
 def tracks_detail(request, track_id):
 
-    if request.method not in ('GET', 'POST'):
-        return HttpResponse(status=405)
+    track = models.Track.objects.filter(identificador=track_id)
+    data_track = list(track.values())
 
-    elif request.method == 'GET':
-        track = models.Track.objects.filter(identificador=track_id)
-        data_track = list(track.values())
-        return JsonResponse(data_track, safe=False)
+    if request.method == 'GET':  # GET album with album_id
+        if data_track:
+            return JsonResponse(data_track, safe=False, status=200)
+        else:
+            return JsonResponse({"mesagge": "Track not found"}, status=409)
+
+    elif request.method == 'DELETE':  # DELETE artist with artist_id
+        if data_track:
+            album.delete()
+            return JsonResponse({"mesagge": "Track was deleted"}, status=204)
+        else:
+            return JsonResponse({"mesagge": "Track not found"}, status=404)
