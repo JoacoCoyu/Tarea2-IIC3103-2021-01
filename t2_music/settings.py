@@ -52,6 +52,7 @@ INSTALLED_APPS = [
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOW_CREDENTIALS = False
 CORS_ORIGIN_WHITELIST = [
+    't2-iic3103-jacouyoumdjian.herokuapp.com',
     'http://127.0.0.1:8000'
 ]
 
@@ -119,8 +120,9 @@ DATABASES = {
     }
 }
 
-db_from_env = dj_database_url.config(conn_max_age=600, ssl_require=True)
+db_from_env = dj_database_url.config(conn_max_age=600)
 DATABASES['default'].update(db_from_env)
+# , ssl_require=True
 
 
 # Password validation
