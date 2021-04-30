@@ -12,11 +12,12 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 import dj_database_url
-#import environ
+import environ
 
 # Initialise environment variables
 # env = environ.Env()
 # environ.Env.read_env()
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -49,12 +50,13 @@ INSTALLED_APPS = [
 
 #APPEND_SLASH = False
 #CSRF_COOKIE_SECURE = True
-CORS_ORIGIN_ALLOW_ALL = False
-CORS_ALLOW_CREDENTIALS = False
-CORS_ORIGIN_WHITELIST = [
-    't2-iic3103-jacouyoumdjian.herokuapp.com',
-    'http://127.0.0.1:8000'
-]
+
+# CORS_ORIGIN_ALLOW_ALL = False
+# CORS_ALLOW_CREDENTIALS = False
+# CORS_ORIGIN_WHITELIST = [
+#     'http://t2-iic3103-jacouyoumdjian.herokuapp.com',
+#     'http://127.0.0.1:8000'
+# ]
 
 CORS_ALLOW_METHODS = (
     'GET',
@@ -66,7 +68,7 @@ CORS_ALLOW_METHODS = (
 )
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
+    # 'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
