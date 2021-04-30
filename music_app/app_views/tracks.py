@@ -5,8 +5,7 @@ from base64 import b64encode
 from .. import models
 
 
-@csrf_exempt
-@api_view(["POST", "GET", "DELETE"])
+@api_view(["GET"])
 # artists/<str:artist_id>/tracks
 def artists_tracks(request, artist_id):
 
@@ -80,6 +79,7 @@ def albums_tracks(request, album_id):
                                                     # tracks=artists_data['tracks'],
                                                     # myself=artists_data['myself'],
                                                     )
+            # print(new_track)
             new_track.save()
             new_track = models.Track.objects.filter(id=new_track.id)
             data_new_track = list(new_track.values())
@@ -120,3 +120,79 @@ def tracks_detail(request, track_id):
             return JsonResponse({"mesagge": "Track was deleted"}, status=204)
         else:
             return JsonResponse({"mesagge": "Track not found"}, status=404)
+
+
+@api_view(["PUT"])
+# tracks/<str:track_id>/play
+def play_tracks(request, track_id):
+    track = models.Track.objects.filter(identificador=track_id)
+    data_track = list(track.values())
+
+    if request.method == 'PUT':
+        if data_track:
+            updated_plays = track.values()[0]['times_played'] + 1
+            track.values().update(times_played=updated_plays)
+
+            return JsonResponse({"mesagge": "Track played"}, status=200)
+
+        else:
+            return JsonResponse({"mesagge": "Track not found"}, status=404)
+
+
+@csrf_exempt
+@api_view(["PUT"])
+# albums/<str:album_id>/tracks/play
+def play_album_tracks(request, album_id):
+    track_album = models.Album.objects.filter(identificador=album_id)
+    data_track_album = list(track_album.values())
+
+    if request.method == 'PUT':
+        if data_track_album:
+            all_tracks = models.Track.objects.filter(
+                album_id_id=data_track_album[0]['id'])
+            for i_track in range(len(list(all_tracks.values()))):
+                track_identificador = all_tracks.values()[
+                    i_track]['identificador']
+                update_track = models.Track.objects.filter(
+                    identificador=track_identificador)
+                updated_plays = update_track.values()[0]['times_played'] + 1
+                update_track.values().update(times_played=updated_plays)
+
+            return JsonResponse({"mesagge": "Album tracks played"}, status=200)
+
+        else:
+            return JsonResponse({"mesagge": "Album not found"}, status=404)
+
+
+@csrf_exempt
+@api_view(["PUT"])
+# artists/<str:artist_id>/albums/play
+def play_artist_tracks(request, artist_id):
+    album_artist = models.Artist.objects.filter(identificador=artist_id)
+    data_album_artist = list(album_artist.values())
+
+    if request.method == 'PUT':
+        if data_album_artist:
+            all_albums = models.Album.objects.filter(
+                artist_id_id=data_album_artist[0]['id'])
+            data_albums = list(all_albums.values())
+
+            all_tracks = []
+            for album in data_albums:
+                track = models.Track.objects.filter(
+                    album_id_id=album['id'])
+                data_tracks = list(track.values())
+                for specific_album in data_tracks:
+                    all_tracks.append(specific_album)
+
+            for i_track in range(len(all_tracks)):
+                track_identificador = all_tracks[i_track]['identificador']
+                update_track = models.Track.objects.filter(
+                    identificador=track_identificador)
+                updated_plays = update_track.values()[0]['times_played'] + 1
+                update_track.values().update(times_played=updated_plays)
+
+            return JsonResponse({"mesagge": "artist tracks played"}, status=200)
+
+        else:
+            return JsonResponse({"mesagge": "Artist not found"}, status=404)
