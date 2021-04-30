@@ -8,10 +8,9 @@ from .. import models
 api_url = 'https://t2-iic3103-jacouyoumdjian.herokuapp.com/'
 
 
-@csrf_exempt
+
 @api_view(["POST", "GET"])
-# artists/<str:artist_id>/albums
-def artists_albums(request, artist_id):  # artist_id = codificacion del name
+def artists_albums(request, artist_id):  # artists/<str:artist_id>/albums
 
     album_artist = models.Artist.objects.filter(identificador=artist_id)
     data_album_artist = list(album_artist.values())
@@ -66,9 +65,7 @@ def artists_albums(request, artist_id):  # artist_id = codificacion del name
             return JsonResponse(data_album, safe=False, status=409)
 
 
-@ csrf_exempt
-@ api_view(["POST", "GET", "DELETE"])
-# albums
+@ api_view(["GET"])  # albums
 def albums(request):
 
     if request.method not in ('GET', 'POST'):
@@ -79,9 +76,7 @@ def albums(request):
         return JsonResponse(data, safe=False, status=200)
 
 
-@ csrf_exempt
-@ api_view(["POST", "GET", "DELETE"])
-# albums/<str:album_id>
+@ api_view(["GET", "DELETE"])  # albums/<str:album_id>
 def albums_detail(request, album_id):
 
     album = models.Album.objects.filter(identificador=album_id)

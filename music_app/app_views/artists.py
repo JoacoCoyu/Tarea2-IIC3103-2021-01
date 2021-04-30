@@ -8,9 +8,8 @@ from .. import models
 api_url = 'https://t2-iic3103-jacouyoumdjian.herokuapp.com/'
 
 
-@csrf_exempt
-@api_view(["GET", "POST"])
-# artists
+
+@api_view(["GET", "POST"])  # artists
 def artists(request):
     if request.method not in ('GET', 'POST'):
         return HttpResponse(status=405)
@@ -55,8 +54,7 @@ def artists(request):
             return JsonResponse(data_artist, safe=False, status=409)
 
 
-@api_view(["GET", "DELETE"])
-# artists/<str:artist_id>
+@api_view(["GET", "DELETE"])  # artists/<str:artist_id>
 def artists_detail(request, artist_id):
 
     artist = models.Artist.objects.filter(identificador=artist_id)

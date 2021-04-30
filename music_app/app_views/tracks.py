@@ -8,8 +8,7 @@ from .. import models
 api_url = 'https://t2-iic3103-jacouyoumdjian.herokuapp.com/'
 
 
-@api_view(["GET"])
-# artists/<str:artist_id>/tracks
+@api_view(["GET"])  # artists/<str:artist_id>/tracks
 def artists_tracks(request, artist_id):
 
     album_artist = models.Artist.objects.filter(identificador=artist_id)
@@ -38,9 +37,7 @@ def artists_tracks(request, artist_id):
             return JsonResponse({"mesagge": "Tracks not found"}, status=404)
 
 
-@csrf_exempt
-@api_view(["POST", "GET", "DELETE"])
-# albums/<str:album_id>/tracks
+@api_view(["POST", "GET"])  # albums/<str:album_id>/tracks
 def albums_tracks(request, album_id):
 
     track_album = models.Album.objects.filter(identificador=album_id)
@@ -102,8 +99,7 @@ def albums_tracks(request, album_id):
             return JsonResponse(data_track, safe=False, status=409)
 
 
-@csrf_exempt
-@api_view(["POST", "GET", "DELETE"])
+@api_view(["GET"])
 def tracks(request):
 
     if request.method not in ('GET', 'POST'):
@@ -114,8 +110,7 @@ def tracks(request):
         return JsonResponse(data, safe=False, status=200)
 
 
-@csrf_exempt
-@api_view(["POST", "GET", "DELETE"])
+@api_view(["GET", "DELETE"])
 def tracks_detail(request, track_id):
 
     track = models.Track.objects.filter(identificador=track_id)
@@ -129,14 +124,13 @@ def tracks_detail(request, track_id):
 
     elif request.method == 'DELETE':  # DELETE artist with artist_id
         if data_track:
-            album.delete()
+            track.delete()
             return JsonResponse({"mesagge": "Track was deleted"}, status=204)
         else:
             return JsonResponse({"mesagge": "Track not found"}, status=404)
 
 
-@api_view(["PUT"])
-# tracks/<str:track_id>/play
+@api_view(["PUT"])  # tracks/<str:track_id>/play
 def play_tracks(request, track_id):
     track = models.Track.objects.filter(identificador=track_id)
     data_track = list(track.values())
@@ -152,9 +146,7 @@ def play_tracks(request, track_id):
             return JsonResponse({"mesagge": "Track not found"}, status=404)
 
 
-@csrf_exempt
-@api_view(["PUT"])
-# albums/<str:album_id>/tracks/play
+@api_view(["PUT"])  # albums/<str:album_id>/tracks/play
 def play_album_tracks(request, album_id):
     track_album = models.Album.objects.filter(identificador=album_id)
     data_track_album = list(track_album.values())
@@ -177,9 +169,7 @@ def play_album_tracks(request, album_id):
             return JsonResponse({"mesagge": "Album not found"}, status=404)
 
 
-@csrf_exempt
-@api_view(["PUT"])
-# artists/<str:artist_id>/albums/play
+@api_view(["PUT"])  # artists/<str:artist_id>/albums/play
 def play_artist_tracks(request, artist_id):
     album_artist = models.Artist.objects.filter(identificador=artist_id)
     data_album_artist = list(album_artist.values())
