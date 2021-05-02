@@ -69,8 +69,6 @@ def albums_tracks(request, album_id):
             return JsonResponse({"mesagge": "Tracks not found"}, status=404)
 
     elif request.method == 'POST':  # POST track from album album_id
-        if not data_track_album:  # si es que el artista no existe
-            return JsonResponse({"mesagge": "álbum no existe"}, status=422)
 
         valid_inputs = []
         track_data = request.data
@@ -85,6 +83,9 @@ def albums_tracks(request, album_id):
             request_duration = request.data["duration"]
             if (type(request_name) != str) or (type(request_duration) != float and type(request_duration) != int):
                 return JsonResponse({"mesagge": "Invalid input"}, status=400)
+
+        if not data_track_album:  # si es que el artista no existe
+            return JsonResponse({"mesagge": "álbum no existe"}, status=422)
 
         encoded = b64encode(track_data['name'].encode()).decode('utf-8')
         exists_track = models.Track.objects.filter(identificador=encoded[0:22])
@@ -180,7 +181,7 @@ def play_tracks(request, track_id):
         if data_track:
             updated_plays = track.values()[0]['times_played'] + 1
             track.values().update(times_played=updated_plays)
-            return JsonResponse({"mesagge": "Canción no reproducida"}, status=200)
+            return JsonResponse(status=200)
 
         else:
             return JsonResponse({"mesagge": "Canción no encontrada"}, status=404)
@@ -203,7 +204,7 @@ def play_album_tracks(request, album_id):
                 updated_plays = update_track.values()[0]['times_played'] + 1
                 update_track.values().update(times_played=updated_plays)
 
-            return JsonResponse({"mesagge": "canciones álbum reproducidas"}, status=200)
+            return JsonResponse(status=200)
 
         else:
             return JsonResponse({"mesagge": "álbum no encontrado"}, status=404)
@@ -235,7 +236,7 @@ def play_artist_tracks(request, artist_id):
                 updated_plays = update_track.values()[0]['times_played'] + 1
                 update_track.values().update(times_played=updated_plays)
 
-            return JsonResponse({"mesagge": "canciones de artista reproducidas"}, status=200)
+            return JsonResponse(status=200)
 
         else:
             return JsonResponse({"mesagge": "artista no encontrado"}, status=404)

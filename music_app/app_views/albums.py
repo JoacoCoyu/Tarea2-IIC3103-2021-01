@@ -36,9 +36,6 @@ def artists_albums(request, artist_id):  # artists/<str:artist_id>/albums
 
     elif request.method == 'POST':  # POST new album from artist artist_id
 
-        if not data_album_artist:  # si es que el artista no existe
-            return JsonResponse({"mesagge": "artista no existe"}, status=422)
-
         valid_inputs = []
         album_data = request.data
         for key in album_data.keys():
@@ -53,12 +50,12 @@ def artists_albums(request, artist_id):  # artists/<str:artist_id>/albums
             if (type(request_name) != str) or (type(request_genre) != str):
                 return JsonResponse({"mesagge": "Invalid input"}, status=400)
 
-        # print(request.data)
+        if not data_album_artist:  # si es que el artista no existe
+            return JsonResponse({"mesagge": "artista no existe"}, status=422)
+
         encoded = b64encode(request.data['name'].encode()).decode('utf-8')
         exists_album = models.Album.objects.filter(identificador=encoded[0:22])
         data_album = list(exists_album.values())
-        # print(data_album)
-        # print(artist_id)
 
         if not data_album:
             new_album = models.Album.objects.create(name=album_data['name'],

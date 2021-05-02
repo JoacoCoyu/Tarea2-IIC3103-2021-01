@@ -38,10 +38,9 @@ def artists(request):
                 return JsonResponse({"mesagge": "Invalid input"}, status=400)
 
         encoded = b64encode(artist_data['name'].encode()).decode('utf-8')
-        exists_artist = models.Artist.objects.filter(identificador=encoded[0:22])
+        exists_artist = models.Artist.objects.filter(
+            identificador=encoded[0:22])
         data_artist = list(exists_artist.values())
-        print(encoded)
-        print(data_artist)
 
         if not data_artist:
             print('no lo crees')
