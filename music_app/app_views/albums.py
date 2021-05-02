@@ -28,6 +28,7 @@ def artists_albums(request, artist_id):  # artists/<str:artist_id>/albums
                 del album["myself"]
                 del album["id"]
                 del album["identificador"]
+                del album["artist_id_id"]
             return JsonResponse(data_albums, safe=False, status=200)
 
         else:
@@ -71,15 +72,15 @@ def artists_albums(request, artist_id):  # artists/<str:artist_id>/albums
             del data_new_album[0]["myself"]
             del data_new_album[0]["id"]
             del data_new_album[0]["identificador"]
+            del data_new_album[0]["artist_id_id"]
             return JsonResponse(data_new_album, safe=False, status=201)
-
-            return JsonResponse({"msg": "ruta en construccion"}, status=201)
 
         else:
             data_album[0]["self"] = data_album[0]["myself"]
             del data_album[0]["myself"]
             del data_album[0]["id"]
             del data_album[0]["identificador"]
+            del data_album[0]["artist_id_id"]
             return JsonResponse(data_album, safe=False, status=409)
 
 
@@ -96,6 +97,7 @@ def albums(request):
             del album["myself"]
             del album["id"]
             del album["identificador"]
+            del album["artist_id_id"]
         return JsonResponse(data_albums, safe=False, status=200)
 
 
@@ -111,6 +113,7 @@ def albums_detail(request, album_id):
             del data_album[0]["myself"]
             del data_album[0]["id"]
             del data_album[0]["identificador"]
+            del data_album[0]["artist_id_id"]
             return JsonResponse(data_album, safe=False, status=200)
         else:
             return JsonResponse({"mesagge": "álbum no encontrado"}, status=409)

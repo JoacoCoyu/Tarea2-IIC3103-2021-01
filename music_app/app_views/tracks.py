@@ -35,6 +35,7 @@ def artists_tracks(request, artist_id):
                 del track["myself"]
                 del track["id"]
                 del track["identificador"]
+                del track["album_id_id"]
             return JsonResponse(all_tracks, safe=False, status=200)
 
         else:
@@ -61,6 +62,7 @@ def albums_tracks(request, album_id):
                 del track["myself"]
                 del track["id"]
                 del track["identificador"]
+                del track["album_id_id"]
             return JsonResponse(data_tracks, safe=False, status=200)
 
         else:
@@ -112,6 +114,7 @@ def albums_tracks(request, album_id):
             del data_new_track[0]["myself"]
             del data_new_track[0]["id"]
             del data_new_track[0]["identificador"]
+            del data_new_track[0]["album_id_id"]
             return JsonResponse(data_new_track, safe=False, status=201)
 
         else:
@@ -119,6 +122,7 @@ def albums_tracks(request, album_id):
             del data_track[0]["myself"]
             del data_track[0]["id"]
             del data_track[0]["identificador"]
+            del data_track[0]["album_id_id"]
             return JsonResponse(data_track, safe=False, status=409)
 
 
@@ -135,6 +139,7 @@ def tracks(request):
             del track["myself"]
             del track["id"]
             del track["identificador"]
+            del track["album_id_id"]
         return JsonResponse(data_tracks, safe=False, status=200)
 
 
@@ -150,6 +155,7 @@ def tracks_detail(request, track_id):
             del data_track[0]["myself"]
             del data_track[0]["id"]
             del data_track[0]["identificador"]
+            del data_track[0]["album_id_id"]
             return JsonResponse(data_track, safe=False, status=200)
         else:
             return JsonResponse({"mesagge": "Canción no encontrada"}, status=409)
