@@ -120,7 +120,7 @@ def albums_detail(request, album_id):
             del data_album[0]["artist_id_id"]
             return JsonResponse(data_album[0], safe=False, status=200)
         else:
-            return JsonResponse({"mesagge": "álbum no encontrado"}, status=409)
+            return JsonResponse({"mesagge": "álbum no encontrado"}, status=404)
 
     elif request.method == 'DELETE':  # DELETE artist with artist_id
         if data_album:

@@ -71,7 +71,7 @@ def albums_tracks(request, album_id):
     elif request.method == 'POST':  # POST track from album album_id
         if not data_track_album:  # si es que el artista no existe
             return JsonResponse({"mesagge": "álbum no existe"}, status=422)
-            
+
         valid_inputs = []
         track_data = request.data
         for key in track_data.keys():
@@ -161,14 +161,14 @@ def tracks_detail(request, track_id):
             del data_track[0]["album_id_id"]
             return JsonResponse(data_track[0], safe=False, status=200)
         else:
-            return JsonResponse({"mesagge": "Canción no encontrada"}, status=409)
+            return JsonResponse({"mesagge": "Canción no encontrada"}, status=404)
 
     elif request.method == 'DELETE':  # DELETE artist with artist_id
         if data_track:
             track.delete()
             return JsonResponse({"mesagge": "Track was deleted"}, status=204)
         else:
-            return JsonResponse({"mesagge": "Track not found"}, status=404)
+            return JsonResponse({"mesagge": "Canción no encontrada"}, status=404)
 
 
 @api_view(["PUT"])  # tracks/<str:track_id>/play
@@ -180,10 +180,10 @@ def play_tracks(request, track_id):
         if data_track:
             updated_plays = track.values()[0]['times_played'] + 1
             track.values().update(times_played=updated_plays)
-            return JsonResponse({"mesagge": "Track played"}, status=200)
+            return JsonResponse({"mesagge": "Canción no reproducida"}, status=200)
 
         else:
-            return JsonResponse({"mesagge": "Track not found"}, status=404)
+            return JsonResponse({"mesagge": "Canción no encontrada"}, status=404)
 
 
 @api_view(["PUT"])  # albums/<str:album_id>/tracks/play
@@ -203,10 +203,10 @@ def play_album_tracks(request, album_id):
                 updated_plays = update_track.values()[0]['times_played'] + 1
                 update_track.values().update(times_played=updated_plays)
 
-            return JsonResponse({"mesagge": "Album tracks played"}, status=200)
+            return JsonResponse({"mesagge": "canciones álbum reproducidas"}, status=200)
 
         else:
-            return JsonResponse({"mesagge": "Album not found"}, status=404)
+            return JsonResponse({"mesagge": "álbum no encontrado"}, status=404)
 
 
 @api_view(["PUT"])  # artists/<str:artist_id>/albums/play
@@ -235,7 +235,7 @@ def play_artist_tracks(request, artist_id):
                 updated_plays = update_track.values()[0]['times_played'] + 1
                 update_track.values().update(times_played=updated_plays)
 
-            return JsonResponse({"mesagge": "artist tracks played"}, status=200)
+            return JsonResponse({"mesagge": "canciones de artista reproducidas"}, status=200)
 
         else:
-            return JsonResponse({"mesagge": "Artist not found"}, status=404)
+            return JsonResponse({"mesagge": "artista no encontrado"}, status=404)
