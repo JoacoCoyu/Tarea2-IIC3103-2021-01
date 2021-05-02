@@ -181,7 +181,7 @@ def play_tracks(request, track_id):
         if data_track:
             updated_plays = track.values()[0]['times_played'] + 1
             track.values().update(times_played=updated_plays)
-            return JsonResponse(status=200)
+            return JsonResponse({"mesagge": "canción reproducida"}, status=200)
 
         else:
             return JsonResponse({"mesagge": "Canción no encontrada"}, status=404)
@@ -204,7 +204,7 @@ def play_album_tracks(request, album_id):
                 updated_plays = update_track.values()[0]['times_played'] + 1
                 update_track.values().update(times_played=updated_plays)
 
-            return JsonResponse(status=200)
+            return JsonResponse({"mesagge": "canciones del álbum reproducidas"}, status=200)
 
         else:
             return JsonResponse({"mesagge": "álbum no encontrado"}, status=404)
@@ -236,7 +236,7 @@ def play_artist_tracks(request, artist_id):
                 updated_plays = update_track.values()[0]['times_played'] + 1
                 update_track.values().update(times_played=updated_plays)
 
-            return JsonResponse(status=200)
+            return JsonResponse({"mesagge": "todas las canciones del artista fueron reproducidas"}, status=200)
 
         else:
             return JsonResponse({"mesagge": "artista no encontrado"}, status=404)
