@@ -87,7 +87,7 @@ def albums_tracks(request, album_id):
                 return JsonResponse({"mesagge": "Invalid input"}, status=400)
 
         encoded = b64encode(track_data['name'].encode()).decode('utf-8')
-        exists_track = models.Track.objects.filter(identificador=encoded)
+        exists_track = models.Track.objects.filter(identificador=encoded[0:22])
         data_track = list(exists_track.values())
 
         album_track = models.Album.objects.filter(identificador=album_id)

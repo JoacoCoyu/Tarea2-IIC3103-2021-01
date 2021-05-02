@@ -20,7 +20,6 @@ def artists(request):
             del artist["myself"]
             del artist["id"]
             del artist["identificador"]
-        print(data_artists)
         return JsonResponse(data_artists, safe=False, status=200)
 
     elif request.method == 'POST':  # POST a new artist
@@ -39,10 +38,13 @@ def artists(request):
                 return JsonResponse({"mesagge": "Invalid input"}, status=400)
 
         encoded = b64encode(artist_data['name'].encode()).decode('utf-8')
-        exists_artist = models.Artist.objects.filter(identificador=encoded)
+        exists_artist = models.Artist.objects.filter(identificador=encoded[0:22])
         data_artist = list(exists_artist.values())
+        print(encoded)
+        print(data_artist)
 
         if not data_artist:
+            print('no lo crees')
             new_artist = models.Artist.objects.create(name=artist_data['name'],
                                                       identificador=encoded[0:22],
                                                       age=artist_data['age'],

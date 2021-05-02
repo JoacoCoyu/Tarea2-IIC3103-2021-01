@@ -53,9 +53,12 @@ def artists_albums(request, artist_id):  # artists/<str:artist_id>/albums
             if (type(request_name) != str) or (type(request_genre) != str):
                 return JsonResponse({"mesagge": "Invalid input"}, status=400)
 
-        encoded = b64encode(album_data['name'].encode()).decode('utf-8')
-        exists_album = models.Album.objects.filter(identificador=encoded)
+        # print(request.data)
+        encoded = b64encode(request.data['name'].encode()).decode('utf-8')
+        exists_album = models.Album.objects.filter(identificador=encoded[0:22])
         data_album = list(exists_album.values())
+        # print(data_album)
+        # print(artist_id)
 
         if not data_album:
             new_album = models.Album.objects.create(name=album_data['name'],
