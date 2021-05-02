@@ -8,7 +8,6 @@ from .. import models
 api_url = 'https://t2-iic3103-jacouyoumdjian.herokuapp.com/'
 
 
-
 @api_view(["POST", "GET"])
 def artists_albums(request, artist_id):  # artists/<str:artist_id>/albums
 
@@ -24,6 +23,9 @@ def artists_albums(request, artist_id):  # artists/<str:artist_id>/albums
             all_albums = models.Album.objects.filter(
                 artist_id_id=data_album_artist[0]['id'])
             data_albums = list(all_albums.values())
+            for album in data_albums:
+                album["self"] = album["myself"]
+                del album["myself"]
             return JsonResponse(data_albums, safe=False, status=200)
 
         else:
@@ -57,6 +59,8 @@ def artists_albums(request, artist_id):  # artists/<str:artist_id>/albums
             new_album.save()
             new_album = models.Album.objects.filter(id=new_album.id)
             data_new_album = list(new_album.values())
+            data_new_album[0]["self"] = data_new_album[0]["myself"]
+            del data_new_album[0]["myself"]
             return JsonResponse(data_new_album, safe=False, status=201)
 
             return JsonResponse({"msg": "ruta en construccion"}, status=201)
@@ -72,8 +76,11 @@ def albums(request):
         return HttpResponse(status=405)
 
     if request.method == 'GET':  # GET all albums
-        data = list(models.Album.objects.values())
-        return JsonResponse(data, safe=False, status=200)
+        data_albums = list(models.Album.objects.values())
+        for album in data_albums:
+            album["self"] = album["myself"]
+            del album["myself"]
+        return JsonResponse(data_albums, safe=False, status=200)
 
 
 @ api_view(["GET", "DELETE"])  # albums/<str:album_id>
@@ -84,6 +91,8 @@ def albums_detail(request, album_id):
 
     if request.method == 'GET':  # GET album with album_id
         if data_album:
+            data_album[0]["self"] = data_album[0]["myself"]
+            del data_album[0]["myself"]
             return JsonResponse(data_album, safe=False, status=200)
         else:
             return JsonResponse({"mesagge": "Album not found"}, status=409)

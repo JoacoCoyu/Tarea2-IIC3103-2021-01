@@ -9,8 +9,16 @@ class Artist(models.Model):
     tracks = models.URLField()
     myself = models.URLField()
 
-    def __str__(self):
-        return self.name
+
+# class Artist(models.Model):
+
+#     def __init__(self):
+#         self.name = models.CharField(max_length=100)
+#         self.age = models.IntegerField()
+#         self.identificador = models.CharField(max_length=200)
+#         self.albums = models.URLField()
+#         self.tracks = models.URLField()
+#         self.self = models.URLField()
 
 
 class Album(models.Model):
@@ -23,9 +31,6 @@ class Album(models.Model):
     tracks = models.URLField()
     myself = models.URLField()
 
-    def __str__(self):
-        return self.name
-
 
 class Track(models.Model):
     album_id = models.ForeignKey(
@@ -37,6 +42,3 @@ class Track(models.Model):
     artist = models.URLField()
     album = models.URLField()
     myself = models.URLField()
-
-    def __str__(self):
-        return self.name

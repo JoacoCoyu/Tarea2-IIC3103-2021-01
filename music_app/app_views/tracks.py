@@ -30,7 +30,9 @@ def artists_tracks(request, artist_id):
                 data_tracks = list(track.values())
                 for specific_album in data_tracks:
                     all_tracks.append(specific_album)
-
+            for track in all_tracks:
+                track["self"] = track["myself"]
+                del track["myself"]
             return JsonResponse(all_tracks, safe=False, status=200)
 
         else:
@@ -52,6 +54,9 @@ def albums_tracks(request, album_id):
             all_tracks = models.Track.objects.filter(
                 album_id_id=data_track_album[0]['id'])
             data_tracks = list(all_tracks.values())
+            for track in data_tracks:
+                track["self"] = track["myself"]
+                del track["myself"]
             return JsonResponse(data_tracks, safe=False, status=200)
 
         else:
@@ -93,6 +98,8 @@ def albums_tracks(request, album_id):
             new_track.save()
             new_track = models.Track.objects.filter(id=new_track.id)
             data_new_track = list(new_track.values())
+            data_new_track[0]["self"] = data_new_track[0]["myself"]
+            del data_new_track[0]["myself"]
             return JsonResponse(data_new_track, safe=False, status=201)
 
         else:
@@ -106,8 +113,11 @@ def tracks(request):
         return HttpResponse(status=405)
 
     if request.method == 'GET':
-        data = list(models.Track.objects.values())
-        return JsonResponse(data, safe=False, status=200)
+        data_tracks = list(models.Track.objects.values())
+        for track in data_tracks:
+            track["self"] = track["myself"]
+            del track["myself"]
+        return JsonResponse(data_tracks, safe=False, status=200)
 
 
 @api_view(["GET", "DELETE"])
@@ -118,6 +128,8 @@ def tracks_detail(request, track_id):
 
     if request.method == 'GET':  # GET album with album_id
         if data_track:
+            data_track[0]["self"] = data_track[0]["myself"]
+            del data_track[0]["myself"]
             return JsonResponse(data_track, safe=False, status=200)
         else:
             return JsonResponse({"mesagge": "Track not found"}, status=409)
@@ -139,7 +151,6 @@ def play_tracks(request, track_id):
         if data_track:
             updated_plays = track.values()[0]['times_played'] + 1
             track.values().update(times_played=updated_plays)
-
             return JsonResponse({"mesagge": "Track played"}, status=200)
 
         else:

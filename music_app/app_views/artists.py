@@ -8,15 +8,17 @@ from .. import models
 api_url = 'https://t2-iic3103-jacouyoumdjian.herokuapp.com/'
 
 
-
 @api_view(["GET", "POST"])  # artists
 def artists(request):
     if request.method not in ('GET', 'POST'):
         return HttpResponse(status=405)
 
     if request.method == 'GET':  # GET all artists
-        data = list(models.Artist.objects.values())
-        return JsonResponse(data, safe=False, status=200)
+        data_artists = list(models.Artist.objects.values())
+        for artist in data_artists:
+            artist["self"] = artist["myself"]
+            del artist["myself"]
+        return JsonResponse(data_artists, safe=False, status=200)
 
     elif request.method == 'POST':  # POST a new artist
         valid_inputs = []
@@ -25,7 +27,7 @@ def artists(request):
             valid_inputs.append(key)
 
         if valid_inputs != ['name', 'age']:
-            return JsonResponse({"mesagge": "Invalid input"}, safe=False, status=400)
+            return JsonResponse({"mesagge": "Invalid input"}, status=400)
 
         encoded = b64encode(artist_data['name'].encode()).decode('utf-8')
         exists_artist = models.Artist.objects.filter(identificador=encoded)
@@ -35,19 +37,18 @@ def artists(request):
             new_artist = models.Artist.objects.create(name=artist_data['name'],
                                                       identificador=encoded[0:22],
                                                       age=artist_data['age'],
-                                                      # artists/<artist_id>/albums
-                                                      albums=api_url + \
+                                                      albums=api_url +
                                                       f'artists/{encoded[0:22]}/albums',
-                                                      # artists/<artist_id>/tracks
-                                                      tracks=api_url + \
+                                                      tracks=api_url +
                                                       f'artists/{encoded[0:22]}/tracks',
-                                                      # artists/<artist_id>
-                                                      myself=api_url + \
+                                                      myself=api_url +
                                                       f'artists/{encoded[0:22]}'
                                                       )
             new_artist.save()
             new_artist = models.Artist.objects.filter(id=new_artist.id)
             data_new_artist = list(new_artist.values())
+            data_new_artist[0]["self"] = data_new_artist[0]["myself"]
+            del data_new_artist[0]["myself"]
             return JsonResponse(data_new_artist, safe=False, status=201)
 
         else:
@@ -62,6 +63,8 @@ def artists_detail(request, artist_id):
 
     if request.method == 'GET':  # GET artist with artist_id
         if data_artist:
+            data_artist[0]["self"] = data_artist[0]["myself"]
+            del data_artist[0]["myself"]
             return JsonResponse(data_artist, safe=False, status=200)
         else:
             return JsonResponse({"mesagge": "Artist not found"}, status=404)
