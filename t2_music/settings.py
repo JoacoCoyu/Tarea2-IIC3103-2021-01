@@ -112,7 +112,7 @@ WSGI_APPLICATION = 't2_music.wsgi.application'
 #         'USER': env('DATABASE_USER'),
 #         'PASSWORD': env('DATABASE_PASS'),
 #     }
-}
+# }
 
 
 DATABASES = {
