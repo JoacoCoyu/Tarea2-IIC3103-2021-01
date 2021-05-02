@@ -73,7 +73,7 @@ def artists_albums(request, artist_id):  # artists/<str:artist_id>/albums
             del data_new_album[0]["id"]
             del data_new_album[0]["identificador"]
             del data_new_album[0]["artist_id_id"]
-            return JsonResponse(data_new_album, safe=False, status=201)
+            return JsonResponse(data_new_album[0], safe=False, status=201)
 
         else:
             data_album[0]["self"] = data_album[0]["myself"]
@@ -81,7 +81,7 @@ def artists_albums(request, artist_id):  # artists/<str:artist_id>/albums
             del data_album[0]["id"]
             del data_album[0]["identificador"]
             del data_album[0]["artist_id_id"]
-            return JsonResponse(data_album, safe=False, status=409)
+            return JsonResponse(data_album[0], safe=False, status=409)
 
 
 @ api_view(["GET"])  # albums
@@ -114,7 +114,7 @@ def albums_detail(request, album_id):
             del data_album[0]["id"]
             del data_album[0]["identificador"]
             del data_album[0]["artist_id_id"]
-            return JsonResponse(data_album, safe=False, status=200)
+            return JsonResponse(data_album[0], safe=False, status=200)
         else:
             return JsonResponse({"mesagge": "álbum no encontrado"}, status=409)
 

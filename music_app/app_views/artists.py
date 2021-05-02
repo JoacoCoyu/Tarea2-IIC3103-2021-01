@@ -60,14 +60,14 @@ def artists(request):
             del data_new_artist[0]["myself"]
             del data_new_artist[0]["id"]
             del data_new_artist[0]["identificador"]
-            return JsonResponse(data_new_artist, safe=False, status=201)
+            return JsonResponse(data_new_artist[0], safe=False, status=201)
 
         else:
             data_artist[0]["self"] = data_artist[0]["myself"]
             del data_artist[0]["myself"]
             del data_artist[0]["id"]
             del data_artist[0]["identificador"]
-            return JsonResponse(data_artist, safe=False, status=409)
+            return JsonResponse(data_artist[0], safe=False, status=409)
 
 
 @api_view(["GET", "DELETE"])  # artists/<str:artist_id>
@@ -82,7 +82,7 @@ def artists_detail(request, artist_id):
             del data_artist[0]["myself"]
             del data_artist[0]["id"]
             del data_artist[0]["identificador"]
-            return JsonResponse(data_artist, safe=False, status=200)
+            return JsonResponse(data_artist[0], safe=False, status=200)
         else:
             return JsonResponse({"mesagge": "Artist not found"}, status=404)
 

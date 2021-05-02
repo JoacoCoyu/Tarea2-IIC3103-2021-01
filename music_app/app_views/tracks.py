@@ -115,7 +115,7 @@ def albums_tracks(request, album_id):
             del data_new_track[0]["id"]
             del data_new_track[0]["identificador"]
             del data_new_track[0]["album_id_id"]
-            return JsonResponse(data_new_track, safe=False, status=201)
+            return JsonResponse(data_new_track[0], safe=False, status=201)
 
         else:
             data_track[0]["self"] = data_track[0]["myself"]
@@ -123,7 +123,7 @@ def albums_tracks(request, album_id):
             del data_track[0]["id"]
             del data_track[0]["identificador"]
             del data_track[0]["album_id_id"]
-            return JsonResponse(data_track, safe=False, status=409)
+            return JsonResponse(data_track[0], safe=False, status=409)
 
 
 @api_view(["GET"])
@@ -156,7 +156,7 @@ def tracks_detail(request, track_id):
             del data_track[0]["id"]
             del data_track[0]["identificador"]
             del data_track[0]["album_id_id"]
-            return JsonResponse(data_track, safe=False, status=200)
+            return JsonResponse(data_track[0], safe=False, status=200)
         else:
             return JsonResponse({"mesagge": "Canción no encontrada"}, status=409)
 
