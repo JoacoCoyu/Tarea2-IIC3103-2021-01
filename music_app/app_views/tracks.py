@@ -69,6 +69,9 @@ def albums_tracks(request, album_id):
             return JsonResponse({"mesagge": "Tracks not found"}, status=404)
 
     elif request.method == 'POST':  # POST track from album album_id
+        if not data_track_album:  # si es que el artista no existe
+            return JsonResponse({"mesagge": "álbum no existe"}, status=422)
+            
         valid_inputs = []
         track_data = request.data
         for key in track_data.keys():

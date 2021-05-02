@@ -32,9 +32,13 @@ def artists_albums(request, artist_id):  # artists/<str:artist_id>/albums
             return JsonResponse(data_albums, safe=False, status=200)
 
         else:
-            return JsonResponse({"mesagge": "Albums not found"}, status=404)
+            return JsonResponse({"mesagge": "álbum no encontrado"}, status=404)
 
     elif request.method == 'POST':  # POST new album from artist artist_id
+
+        if not data_album_artist:  # si es que el artista no existe
+            return JsonResponse({"mesagge": "artista no existe"}, status=422)
+
         valid_inputs = []
         album_data = request.data
         for key in album_data.keys():
