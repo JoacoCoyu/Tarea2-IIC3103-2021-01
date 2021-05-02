@@ -29,6 +29,12 @@ def artists(request):
         if valid_inputs != ['name', 'age']:
             return JsonResponse({"mesagge": "Invalid input"}, status=400)
 
+        else:
+            request_name = request.data["name"]
+            request_age = request.data["age"]
+            if (type(request_name) != str) or (type(request_age) != int):
+                return JsonResponse({"mesagge": "Invalid input"}, status=400)
+
         encoded = b64encode(artist_data['name'].encode()).decode('utf-8')
         exists_artist = models.Artist.objects.filter(identificador=encoded)
         data_artist = list(exists_artist.values())
@@ -52,6 +58,8 @@ def artists(request):
             return JsonResponse(data_new_artist, safe=False, status=201)
 
         else:
+            data_artist[0]["self"] = data_artist[0]["myself"]
+            del data_artist[0]["myself"]
             return JsonResponse(data_artist, safe=False, status=409)
 
 

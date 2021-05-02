@@ -40,6 +40,12 @@ def artists_albums(request, artist_id):  # artists/<str:artist_id>/albums
         if valid_inputs != ['name', 'genre']:
             return JsonResponse({"mesagge": "Invalid input"}, safe=False, status=400)
 
+        else:
+            request_name = request.data["name"]
+            request_genre = request.data["genre"]
+            if (type(request_name) != str) or (type(request_genre) != str):
+                return JsonResponse({"mesagge": "Invalid input"}, status=400)
+
         encoded = b64encode(album_data['name'].encode()).decode('utf-8')
         exists_album = models.Album.objects.filter(identificador=encoded)
         data_album = list(exists_album.values())
@@ -66,6 +72,8 @@ def artists_albums(request, artist_id):  # artists/<str:artist_id>/albums
             return JsonResponse({"msg": "ruta en construccion"}, status=201)
 
         else:
+            data_album[0]["self"] = data_album[0]["myself"]
+            del data_album[0]["myself"]
             return JsonResponse(data_album, safe=False, status=409)
 
 

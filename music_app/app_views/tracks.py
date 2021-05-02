@@ -71,6 +71,12 @@ def albums_tracks(request, album_id):
         if valid_inputs != ['name', 'duration']:
             return JsonResponse({"mesagge": "Invalid input"}, safe=False, status=400)
 
+        else:
+            request_name = request.data["name"]
+            request_duration = request.data["duration"]
+            if (type(request_name) != str) or (type(request_duration) != float and type(request_duration) != int):
+                return JsonResponse({"mesagge": "Invalid input"}, status=400)
+
         encoded = b64encode(track_data['name'].encode()).decode('utf-8')
         exists_track = models.Track.objects.filter(identificador=encoded)
         data_track = list(exists_track.values())
@@ -103,6 +109,8 @@ def albums_tracks(request, album_id):
             return JsonResponse(data_new_track, safe=False, status=201)
 
         else:
+            data_track[0]["self"] = data_track[0]["myself"]
+            del data_track[0]["myself"]
             return JsonResponse(data_track, safe=False, status=409)
 
 
