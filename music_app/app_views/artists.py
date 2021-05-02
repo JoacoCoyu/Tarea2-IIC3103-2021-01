@@ -18,6 +18,9 @@ def artists(request):
         for artist in data_artists:
             artist["self"] = artist["myself"]
             del artist["myself"]
+            del artist["id"]
+            del artist["identificador"]
+        print(data_artists)
         return JsonResponse(data_artists, safe=False, status=200)
 
     elif request.method == 'POST':  # POST a new artist
@@ -55,11 +58,15 @@ def artists(request):
             data_new_artist = list(new_artist.values())
             data_new_artist[0]["self"] = data_new_artist[0]["myself"]
             del data_new_artist[0]["myself"]
+            del data_new_artist[0]["id"]
+            del data_new_artist[0]["identificador"]
             return JsonResponse(data_new_artist, safe=False, status=201)
 
         else:
             data_artist[0]["self"] = data_artist[0]["myself"]
             del data_artist[0]["myself"]
+            del data_artist[0]["id"]
+            del data_artist[0]["identificador"]
             return JsonResponse(data_artist, safe=False, status=409)
 
 
@@ -73,6 +80,8 @@ def artists_detail(request, artist_id):
         if data_artist:
             data_artist[0]["self"] = data_artist[0]["myself"]
             del data_artist[0]["myself"]
+            del data_artist[0]["id"]
+            del data_artist[0]["identificador"]
             return JsonResponse(data_artist, safe=False, status=200)
         else:
             return JsonResponse({"mesagge": "Artist not found"}, status=404)
@@ -80,6 +89,6 @@ def artists_detail(request, artist_id):
     elif request.method == 'DELETE':  # DELETE artist with artist_id
         if data_artist:
             artist.delete()
-            return JsonResponse({"mesagge": "Artist was deleted"}, status=204)
+            return JsonResponse({"mesagge": "artista eliminado"}, status=204)
         else:
-            return JsonResponse({"mesagge": "Artist not found"}, status=404)
+            return JsonResponse({"mesagge": "artista inexistente"}, status=404)

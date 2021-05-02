@@ -33,10 +33,12 @@ def artists_tracks(request, artist_id):
             for track in all_tracks:
                 track["self"] = track["myself"]
                 del track["myself"]
+                del track["id"]
+                del track["identificador"]
             return JsonResponse(all_tracks, safe=False, status=200)
 
         else:
-            return JsonResponse({"mesagge": "Tracks not found"}, status=404)
+            return JsonResponse({"mesagge": "artista no encontrado"}, status=404)
 
 
 @api_view(["POST", "GET"])  # albums/<str:album_id>/tracks
@@ -57,6 +59,8 @@ def albums_tracks(request, album_id):
             for track in data_tracks:
                 track["self"] = track["myself"]
                 del track["myself"]
+                del track["id"]
+                del track["identificador"]
             return JsonResponse(data_tracks, safe=False, status=200)
 
         else:
@@ -106,11 +110,15 @@ def albums_tracks(request, album_id):
             data_new_track = list(new_track.values())
             data_new_track[0]["self"] = data_new_track[0]["myself"]
             del data_new_track[0]["myself"]
+            del data_new_track[0]["id"]
+            del data_new_track[0]["identificador"]
             return JsonResponse(data_new_track, safe=False, status=201)
 
         else:
             data_track[0]["self"] = data_track[0]["myself"]
             del data_track[0]["myself"]
+            del data_track[0]["id"]
+            del data_track[0]["identificador"]
             return JsonResponse(data_track, safe=False, status=409)
 
 
@@ -125,6 +133,8 @@ def tracks(request):
         for track in data_tracks:
             track["self"] = track["myself"]
             del track["myself"]
+            del track["id"]
+            del track["identificador"]
         return JsonResponse(data_tracks, safe=False, status=200)
 
 
@@ -138,9 +148,11 @@ def tracks_detail(request, track_id):
         if data_track:
             data_track[0]["self"] = data_track[0]["myself"]
             del data_track[0]["myself"]
+            del data_track[0]["id"]
+            del data_track[0]["identificador"]
             return JsonResponse(data_track, safe=False, status=200)
         else:
-            return JsonResponse({"mesagge": "Track not found"}, status=409)
+            return JsonResponse({"mesagge": "Canción no encontrada"}, status=409)
 
     elif request.method == 'DELETE':  # DELETE artist with artist_id
         if data_track:

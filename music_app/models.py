@@ -10,17 +10,6 @@ class Artist(models.Model):
     myself = models.URLField()
 
 
-# class Artist(models.Model):
-
-#     def __init__(self):
-#         self.name = models.CharField(max_length=100)
-#         self.age = models.IntegerField()
-#         self.identificador = models.CharField(max_length=200)
-#         self.albums = models.URLField()
-#         self.tracks = models.URLField()
-#         self.self = models.URLField()
-
-
 class Album(models.Model):
     artist_id = models.ForeignKey(
         Artist, related_name='artist', default=None, on_delete=models.CASCADE)
