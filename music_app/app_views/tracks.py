@@ -66,7 +66,7 @@ def albums_tracks(request, album_id):
             return JsonResponse(data_tracks, safe=False, status=200)
 
         else:
-            return JsonResponse({"mesagge": "Tracks not found"}, status=404)
+            return JsonResponse({"mesagge": "canción no encontrada"}, status=404)
 
     elif request.method == 'POST':  # POST track from album album_id
 

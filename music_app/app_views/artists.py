@@ -43,7 +43,6 @@ def artists(request):
         data_artist = list(exists_artist.values())
 
         if not data_artist:
-            print('no lo crees')
             new_artist = models.Artist.objects.create(name=artist_data['name'],
                                                       identificador=encoded[0:22],
                                                       age=artist_data['age'],
