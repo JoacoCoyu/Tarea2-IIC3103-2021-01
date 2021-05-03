@@ -53,7 +53,8 @@ def artists_albums(request, artist_id):  # artists/<str:artist_id>/albums
         if not data_album_artist:  # si es que el artista no existe
             return JsonResponse({"mesagge": "artista no existe"}, status=422)
 
-        encoded = b64encode(request.data['name'].encode()).decode('utf-8')
+        encoded = b64encode(
+            (request.data['name'] + f":{artist_id}").encode()).decode('utf-8')
         exists_album = models.Album.objects.filter(identificador=encoded[0:22])
         data_album = list(exists_album.values())
 

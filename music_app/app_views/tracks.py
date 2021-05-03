@@ -87,7 +87,8 @@ def albums_tracks(request, album_id):
         if not data_track_album:  # si es que el artista no existe
             return JsonResponse({"mesagge": "álbum no existe"}, status=422)
 
-        encoded = b64encode(track_data['name'].encode()).decode('utf-8')
+        encoded = b64encode(
+            (request.data['name'] + f":{album_id}").encode()).decode('utf-8')
         exists_track = models.Track.objects.filter(identificador=encoded[0:22])
         data_track = list(exists_track.values())
 

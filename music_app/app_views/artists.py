@@ -84,7 +84,7 @@ def artists_detail(request, artist_id):
             del data_artist[0]["identificador"]
             return JsonResponse(data_artist[0], safe=False, status=200)
         else:
-            return JsonResponse({"mesagge": "Artist not found"}, status=404)
+            return JsonResponse({"mesagge": "artista no encontrado"}, status=404)
 
     elif request.method == 'DELETE':  # DELETE artist with artist_id
         if data_artist:
